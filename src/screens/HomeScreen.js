@@ -7,8 +7,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-
+import Icon2 from 'react-native-vector-icons/Ionicons'
 
 // Dados da primeira FlatList
 const buttons = [
@@ -16,8 +15,12 @@ const buttons = [
   { id: "2", title: "Senadores" },
   { id: "3", title: "Presidentes da República" },
 ];
+// Filtra ignorando acentos nos nomes
+function removeAccents(str) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const [deputados, setDeputados] = useState([]);
   const [filtro, setFiltro] = useState(''); // Novo estado para o texto do filtro
 
@@ -29,6 +32,8 @@ export default function HomeScreen() {
           id: deputado.id,
           nome: deputado.nome,
           foto: deputado.urlFoto,
+          siglaPartido: deputado.siglaPartido,
+          email: deputado.email
         }));
         setDeputados(deputadosData);
       })
@@ -39,10 +44,16 @@ export default function HomeScreen() {
 
   const renderDeputado = ({ item }) => {
     return (
-      <View style={styles.deputadoContainer}>
-        <Image style={styles.foto} source={{ uri: item.foto }} />
-        <Text style={styles.nome}>{item.nome}</Text>
-      </View>
+      <TouchableOpacity style={styles.deputadoContainer} onPress={() => navigation.navigate('DetailsScreen', { deputado: item })}>
+        <View style={styles.dinossauroAzul}>
+          <View style={styles.iconContainer}>
+            <Icon2 name="add-circle-outline" size={20} color="#94864D" />
+          </View>
+          <Image style={styles.foto} source={{ uri: item.foto }} />
+          <Text style={styles.nome}>{item.nome}</Text>
+          <Text style={styles.siglaPartido}>{item.siglaPartido}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -91,10 +102,12 @@ export default function HomeScreen() {
         {selectedId === "1" && (
           <>
             <View style={styles.inputSection}>
-              <Icon style={styles.inputIcon} name="search" size={20} color="#000" />
+              <Icon style={styles.inputIcon} name="search" size={20} color="" />
               <TextInput
                 style={styles.input}
                 placeholder="Filtrar por nome..."
+                placeholderTextColor="#fff"
+                selectionColor="#94864D"
                 value={filtro}
                 onChangeText={setFiltro}
               />
@@ -102,7 +115,7 @@ export default function HomeScreen() {
             <FlatList
               style={styles.listaPoliticos}
               contentContainerStyle={styles.listaPoliticosContainer}
-              data={deputados.filter(deputado => deputado.nome.toLowerCase().includes(filtro.toLowerCase()))} // Aplicando o filtro
+              data={deputados.filter(deputado => removeAccents(deputado.nome.toLowerCase()).includes(removeAccents(filtro.toLowerCase())))} // Aplicando o filtro
               renderItem={renderDeputado}
               keyExtractor={(item) => item.id}
               numColumns={3}
@@ -133,15 +146,12 @@ const styles = StyleSheet.create({
   btnText: {
     color: '#fff',
   },
-
   btnTextSelecionado: {
     color: '#222'
   },
-
   botaoSelecionado: {
     backgroundColor: '#fff', // Cor de fundo do botão quando selecionado
   },
-
   listaBotoes: {
     backgroundColor: '#2C3B47',
     padding: 10,
@@ -150,51 +160,58 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    marginBottom: 10,
+    backgroundColor: '#56626D',
   },
-
   inputIcon: {
     padding: 10,
-    color: '#56626D',
+    color: '#fff',
   },
-
   input: {
     flex: 1,
     paddingTop: 10,
     paddingRight: 10,
     paddingBottom: 10,
     paddingLeft: 0,
-    backgroundColor: '#fff',
-    color: '#424242',
+    color: '#fff'
   },
-
   deputadoContainer: {
     flex: 1,
     margin: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   wrapperListas: {
-
+    backgroundColor: '#fff'
   },
-
-
   listaPoliticos: {
 
   },
   listaPoliticosContainer: {
 
-
   },
-
   foto: {
     width: 90,
     height: 90,
-    borderRadius: 50,
+    borderRadius: 5,
+    alignSelf: 'center'
   },
+  nome: {
+    fontWeight: '500',
+    textAlign: 'center',
+    color: '#222',
+    marginTop: 4,
+    marginBottom: 2
+  },
+  siglaPartido: {
+    fontWeight: '300',
+    color: '#b0b0b0',
+    textAlign: 'center'
+  },
+  dinossauroAzul: {
 
-
+  },
+  iconContainer: {
+    alignSelf: 'flex-end',
+}
 });
 
