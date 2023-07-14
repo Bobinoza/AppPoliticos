@@ -9,7 +9,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './src/screens/HomeScreen';
 import Donation from './src/screens/Donation';
 import Details from './src/screens/Details';
-import DetailsScreen from './src/components/DetailsScreen';
+import DeputadoScreen from './src/components/DeputadoScreen';
+import Partidos from './src/components/Partidos';
+import EventosOcorridos from './src/components/EventosOcorridos';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -49,8 +52,10 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name='Tabs' component={TabsScreenBottom} options={{ headerShown: false }} />
-          <Stack.Screen name='DetailsScreen' component={DetailsScreen} options={{ headerShown: false }} />
-          {/* <Stack.Screen name='Details' component={Details} /> */}
+          <Stack.Screen name='DeputadoScreen' component={DeputadoScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='Details' component={Details} options={{ headerShown: false }} />
+          <Stack.Screen name='Partidos' component={Partidos} options={{ headerShown: false }} />
+          <Stack.Screen name='EventosOcorridos' component={EventosOcorridos} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

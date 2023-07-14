@@ -1,12 +1,25 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, TouchableOpacity, SafeAreaView } from 'react-native';
 
-const Details = () => {
+import TopBar from '../components/TopBar';
+
+const Details = ({ navigation }) => {  
+
   return (
-    <View>
+    <SafeAreaView>
+      <TopBar navigation={navigation}  title='Details'/>
       <Text>Oi Details</Text>
-    </View>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Home')}
+      >
+        <Text>Voltar</Text>
+      </TouchableOpacity>
+
+   
+
+    </SafeAreaView>
   )
 }
 
-export default Details
+export default Details;

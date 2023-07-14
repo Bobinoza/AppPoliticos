@@ -8,12 +8,14 @@ import {
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons'
+import Partidos from "../components/Partidos";
+import EventosOcorridos from "../components/EventosOcorridos";
 
 // Dados da primeira FlatList
 const buttons = [
   { id: "1", title: "Deputados" },
-  { id: "2", title: "Senadores" },
-  { id: "3", title: "Presidentes da República" },
+  { id: "2", title: "Partidos" },
+  { id: "3", title: "Eventos Ocorridos" },
 ];
 // Filtra ignorando acentos nos nomes
 function removeAccents(str) {
@@ -33,6 +35,7 @@ export default function HomeScreen({ navigation }) {
           nome: deputado.nome,
           foto: deputado.urlFoto,
           siglaPartido: deputado.siglaPartido,
+          siglaUf: deputado.siglaUf,
           email: deputado.email
         }));
         setDeputados(deputadosData);
@@ -44,7 +47,7 @@ export default function HomeScreen({ navigation }) {
 
   const renderDeputado = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.deputadoContainer} onPress={() => navigation.navigate('DetailsScreen', { deputado: item })}>
+      <TouchableOpacity style={styles.deputadoContainer} onPress={() => navigation.navigate('DeputadoScreen', { deputado: item })}>
         <View style={styles.dinossauroAzul}>
           <View style={styles.iconContainer}>
             <Icon2 name="add-circle-outline" size={20} color="#94864D" />
@@ -61,9 +64,9 @@ export default function HomeScreen({ navigation }) {
   const [selectedId, setSelectedId] = useState('1');
 
   // Função para filtrar os dados da segunda FlatList
-  const filterContents = (id) => {
-    return contents.filter((item) => item.id === id);
-  };
+  // const filterContents = (id) => {
+  //   return contents.filter((item) => item.id === id);
+  // };
 
   // Função para renderizar cada item da primeira FlatList
   const renderButton = ({ item, index }) => {
@@ -80,16 +83,16 @@ export default function HomeScreen({ navigation }) {
   };
 
   // Função para renderizar cada item da segunda FlatList
-  const renderContent = ({ item, index }) => {
-    return (
-      <View>
-        <Text style={styles.texto}>{item.content}</Text>
-      </View>
-    )
-  };
+  // const renderContent = ({ item, index }) => {
+  //   return (
+  //     <View>
+  //       <Text style={styles.texto}>{item.content}</Text>
+  //     </View>
+  //   )
+  // };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <View style={styles.wrapperListas}>
         <FlatList
           data={buttons}
@@ -100,7 +103,7 @@ export default function HomeScreen({ navigation }) {
           style={styles.listaBotoes}
         />
         {selectedId === "1" && (
-          <>
+          <View style={{flex: 1}}>
             <View style={styles.inputSection}>
               <Icon style={styles.inputIcon} name="search" size={20} color="" />
               <TextInput
@@ -120,13 +123,13 @@ export default function HomeScreen({ navigation }) {
               keyExtractor={(item) => item.id}
               numColumns={3}
             />
-          </>
+          </View>
         )}
         {selectedId === "2" && (
-          <Text>Esta é a lista de senadores (ainda não implementada).</Text>
+         <Partidos />
         )}
         {selectedId === "3" && (
-          <Text>Esta é a lista de presidentes da república (ainda não implementada).</Text>
+          <EventosOcorridos />
         )}
       </View>
     </SafeAreaView>
@@ -134,6 +137,9 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   botao: {
     backgroundColor: '#56626D', // Cor de fundo do botão
     padding: 10,
@@ -155,6 +161,7 @@ const styles = StyleSheet.create({
   listaBotoes: {
     backgroundColor: '#2C3B47',
     padding: 10,
+    flexGrow: 0
   },
   inputSection: {
     flexDirection: 'row',
@@ -181,7 +188,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   wrapperListas: {
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    flex: 1,
   },
   listaPoliticos: {
 
